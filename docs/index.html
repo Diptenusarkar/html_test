@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>html_test — README</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <h1>Project: html_test</h1>
+    <p>Rendered from README.md</p>
+  </header>
+  <main id="content">Loading README.md…</main>
+  <footer>Powered by marked.js — static site generated from README.md</footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <script>
+    // URL to the raw README in this repository (main branch). If your repo uses a different default branch, update this URL.
+    const rawUrl = "https://raw.githubusercontent.com/Diptenusarkar/html_test/main/README.md";
+
+    fetch(rawUrl)
+      .then(res => {
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+        return res.text();
+      })
+      .then(md => {
+        // Remove YAML front matter if present (---...---)
+        md = md.replace(/^---[\s\S]*?---\s*/,'');
+        // Render markdown to HTML using marked (client-side)
+        document.getElementById('content').innerHTML = marked.parse(md);
+
+        // Fix relative image srcs that start with ./ or / to point to raw.githubusercontent
+        document.querySelectorAll('#content img').forEach(img => {
+          const src = img.getAttribute('src') || '';
+          if (src.startsWith('./') || src.startsWith('/')) {
+            // normalize path
+            let path = src.replace(/^\.\//, '');
+            path = path.replace(/^\//, '');
+            img.src = 'https://raw.githubusercontent.com/Diptenusarkar/html_test/main/' + path;
+          }
+        });
+
+        // Open links that point to raw files in a new tab
+        document.querySelectorAll('#content a').forEach(a => {
+          const href = a.getAttribute('href') || '';
+          if (href.startsWith('./') || href.startsWith('/')) {
+            a.href = 'https://github.com/Diptenusarkar/html_test/blob/main/' + href.replace(/^\.\//,'').replace(/^\//,'');
+            a.target = '_blank';
+          }
+        });
+      })
+      .catch(err => {
+        document.getElementById('content').textContent = 'Failed to load README.md: ' + err;
+      });
+  </script>
+</body>
+</html>
